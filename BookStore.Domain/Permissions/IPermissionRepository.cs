@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Domain.Permissions
 {
-    internal interface IPermissionRepository
+    public interface IPermissionRepository
     {
     }
 }

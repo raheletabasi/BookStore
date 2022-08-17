@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Domain.Orders
 {
-    internal interface IOrderRepository
+    public interface IOrderRepository
     {
     }
 }

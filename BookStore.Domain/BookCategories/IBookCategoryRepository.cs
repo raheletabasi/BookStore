@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace BookStore.Domain.BookCategories;
 
-internal interface IBookCategoryRepository
+public interface IBookCategoryRepository
 {
 }
