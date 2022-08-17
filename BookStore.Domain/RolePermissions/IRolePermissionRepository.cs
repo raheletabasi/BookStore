@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStore.Domain.Permissions
+namespace BookStore.Domain.RolePermissions;
+
+public interface IRolePermissionRepository
 {
-    internal interface IPermissionRepository
-    {
-    }
 }

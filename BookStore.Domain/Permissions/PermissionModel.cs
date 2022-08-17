@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BookStore.Domain.BaseEntities;
+using BookStore.Domain.RolePermissions;
 
-namespace BookStore.Domain.Permission;
+namespace BookStore.Domain.Permissions;
 
-public class Permission
+public class Permission : BaseEntity
 {
+    public string Title { get; set; }
+    public long? ParentId { get; set; }
 
+    #region Relations
+
+    private List<Permission> _permission = new();
+    private List<RolePermission> _rolePermissions = new();
+
+    public IEnumerable<Permission> Permissions => _permission;
+    public IEnumerable<RolePermission> RolePermissions => _rolePermissions;
+
+    #endregion
 }

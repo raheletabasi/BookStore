@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStore.Domain.Permissions
+namespace BookStore.Domain.Orders
 {
-    internal interface IPermissionRepository
+    internal interface IOrderRepository
     {
     }
 }

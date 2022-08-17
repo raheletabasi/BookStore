@@ -1,4 +1,6 @@
-﻿using BookStore.Domain.Books;
+﻿using BookStore.Domain.BaseEntities;
+using BookStore.Domain.BookCategories;
+using BookStore.Domain.Books;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +9,15 @@ using System.Threading.Tasks;
 
 namespace BookStore.Domain.Categories;
 
-internal class Category
+public class Category : BaseEntity
 {
-    public Guid Id { get; set; }
     public string Title { get; set; }
 
     #region Relationships
 
-    private List<Book> _books = new();
+    private List<BookCategory> _bookCategories = new();
 
-    public IEnumerable<Book> Books => _books;
+    public IEnumerable<BookCategory> BookCategories => _bookCategories;
 
     #endregion
 }

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStore.Domain.Carts;
+namespace BookStore.Domain.BookCategories;
 
-internal class ICartRepositorycs
+internal interface IBookCategoryRepository
 {
 }
