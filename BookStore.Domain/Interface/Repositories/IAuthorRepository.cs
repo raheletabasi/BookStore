@@ -5,6 +5,6 @@ namespace BookStore.Domain.Repositories;
 
 public interface IAuthorRepository : IGenericRepository<Author>
 {
-    public Task IsDuplicate(string name, string family, string email);
-    public Task IsDuplicate(Guid id,string name, string family, string email);
+    public Task<bool> IsDuplicate(string name, string family);
+    public Task<bool> IsDuplicate(Guid id,string name, string family);
 }

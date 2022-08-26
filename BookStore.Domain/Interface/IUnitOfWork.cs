@@ -4,6 +4,7 @@ namespace BookStore.Domain.Interface;
 
 public interface IUnitOfWork : IDisposable
 {
+    IAuthorRepository Authors { get; }
     IBookCategoryRepository BookCategories { get; }
     IBookRepository Books { get; }
     ICategoryRepository Categories { get; }
