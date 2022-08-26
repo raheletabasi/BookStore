@@ -7,17 +7,27 @@ namespace BookStore.Infrastructure.Repositories;
 
 internal class BookRepository : GenericRepository<Book>, IBookRepository
 {
+    private readonly BookStoreContext _context;
+
     public BookRepository(BookStoreContext context) : base(context)
     {
+        _context = context;
     }
 
-    public Task IsDuplicate(string name)
+    public async Task<bool> IsDuplicate(string title, Guid authorId, Guid publisherId)
     {
-        throw new NotImplementedException();
+        return await Task.FromResult(_context.Book.Any(x => 
+            x.Name.Equals(title) &&
+            x.AuthorId.Equals(authorId) &&
+            x.PublisherId.Equals(publisherId)));
     }
 
-    public Task IsDuplicate(Guid Id, string name)
+    public async Task<bool> IsDuplicate(Guid id, string title, Guid authorId, Guid publisherId)
     {
-        throw new NotImplementedException();
+        return await Task.FromResult(_context.Book.Any(x =>
+            !x.Id.Equals(id) &&
+            x.Name.Equals(title) &&
+            x.AuthorId.Equals(authorId) &&
+            x.PublisherId.Equals(publisherId))); ;
     }
 }
