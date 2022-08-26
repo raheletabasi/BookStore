@@ -1,4 +1,5 @@
 ﻿using BookStore.Domain.Common;
+using BookStore.Domain.Entities;
 
 namespace BookStore.Domain.Entity;
 
@@ -6,9 +7,9 @@ public class Book : AuditableBaseEntity
 {
     public string Name { get; set; }
     public Guid AuthorId { get; set; }
-    public string Publisher { get; set; }
-    public string Description { get; set; }
-    public decimal price { get; set; }
+    public Guid PublisherId { get; set; }
+    public string? Description { get; set; }
+    public decimal Price { get; set; }
     public bool IsActive { get; set; }
     public string SearchExperssion { get; set; }
 
@@ -21,6 +22,7 @@ public class Book : AuditableBaseEntity
     public IEnumerable<BookCategory> BookCategories => _bookCategories;
 
     public Author Author { get; set; }
+    public Publisher Publisher { get; set; }
 
     #endregion
 }
