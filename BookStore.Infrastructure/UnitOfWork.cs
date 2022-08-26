@@ -13,6 +13,8 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         _context = context;
     }
 
+    public IAuthorRepository Authors { get; }
+
     public IBookCategoryRepository BookCategories { get; }
 
     public IBookRepository Books { get; }
