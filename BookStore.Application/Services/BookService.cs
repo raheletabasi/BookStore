@@ -53,8 +53,8 @@ public class BookService : IBookService
             var isExist = await _unitOfWork.Books.IsExist(id);
             if (isExist)
             {
-                var author = await _unitOfWork.Books.GetByIdAsync(id);
-                await _unitOfWork.Books.DeleteAsync(author);
+                var book = await _unitOfWork.Books.GetByIdAsync(id);
+                await _unitOfWork.Books.DeleteAsync(book);
                 await _unitOfWork.Commit();
 
                 return Interfaces.ResultBook.success;
