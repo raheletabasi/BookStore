@@ -6,4 +6,5 @@ namespace BookStore.Domain.Repositories;
 public interface IOrderDetailRepository : IGenericRepository<OrderDetail>
 {
     Task<IEnumerable<OrderDetail>> GetOrderDetailByOrderId(Guid orderId);
+    Task<OrderDetail> CheckOrderDetail(Guid orderId, Guid bookId);
 }
