@@ -5,7 +5,7 @@ namespace BookStore.Domain.Entity;
 public class Permission : AuditableBaseEntity
 {
     public string Title { get; set; }
-    public long? ParentId { get; set; }
+    public Guid? PermissionId { get; set; }
 
     #region Relations
 
