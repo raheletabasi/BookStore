@@ -2,6 +2,7 @@
 using BookStore.Domain.Repositories;
 using BookStore.Infrastructure.Data;
 using BookStore.Infrastructure.GenericRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Infrastructure.Repositories;
 
@@ -12,6 +13,11 @@ internal class OrderDetailRepository : GenericRepository<OrderDetail>, IOrderDet
     public OrderDetailRepository(BookStoreContext context) : base(context)
     {
         _context = context;
+    }
+
+    public async Task<OrderDetail> CheckOrderDetail(Guid orderId, Guid bookId)
+    {
+        return await _context.OrderDetail.FirstOrDefaultAsync(c => c.OrderId == orderId && c.BookId.Equals(bookId) && !c.IsDeleted);
     }
 
     public async Task<IEnumerable<OrderDetail>> GetOrderDetailByOrderId(Guid orderId)

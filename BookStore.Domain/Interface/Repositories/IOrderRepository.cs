@@ -5,7 +5,7 @@ namespace BookStore.Domain.Repositories
 {
     public interface IOrderRepository : IGenericRepository<Order>
     {
-
-
+        Task<decimal> OrderSum(Guid orderId);
+        Task<Order> CheckUserOrder(Guid userId);
     }
 }
