@@ -4,8 +4,8 @@ namespace BookStore.Domain.Entity;
 
 public class RolePermission : AuditableBaseEntity
 {
-    public long RoleId { get; set; }
-    public long PermissionId { get; set; }
+    public Guid RoleId { get; set; }
+    public Guid PermissionId { get; set; }
 
     #region Relations
 

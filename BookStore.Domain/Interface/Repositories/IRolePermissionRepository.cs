@@ -5,6 +5,6 @@ namespace BookStore.Domain.Repositories;
 
 public interface IRolePermissionRepository : IGenericRepository<RolePermission>
 {
-    public Task IsDuplicate(Guid roleId, Guid permissionId);
-    public Task IsDuplicate(Guid id, Guid roleId, Guid permissionId);
+    public Task<bool> IsDuplicate(Guid roleId, Guid permissionId);
+    public Task<bool> IsDuplicate(Guid id, Guid roleId, Guid permissionId);
 }
