@@ -36,7 +36,7 @@ public class AuthorsController : ControllerBase
 
         if (result == Application.Interfaces.ResultAuthor.notFound) return BadRequest("Auhor Is No Found");
 
-        if (result == Application.Interfaces.ResultAuthor.Error) return BadRequest("Error In Add Author");
+        if (result == Application.Interfaces.ResultAuthor.Error) return BadRequest("Error In Update Author");
 
         return Ok("Success");
     }
@@ -48,7 +48,7 @@ public class AuthorsController : ControllerBase
 
         if (result == Application.Interfaces.ResultAuthor.notFound) return BadRequest("Auhor Is No Found");
 
-        if (result == Application.Interfaces.ResultAuthor.Error) return BadRequest("Error In Add Author");
+        if (result == Application.Interfaces.ResultAuthor.Error) return BadRequest("Error In Delete Author");
 
         return Ok("Success");
     }

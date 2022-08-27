@@ -34,7 +34,7 @@ public class CategoryController : ControllerBase
 
         if (result == ResultCategory.notFound) return BadRequest("Category Is No Found");
 
-        if (result == ResultCategory.Error) return BadRequest("Error In Add Category");
+        if (result == ResultCategory.Error) return BadRequest("Error In Delete Category");
 
         return Ok("Success");
     }

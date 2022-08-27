@@ -34,7 +34,7 @@ public class BookController : ControllerBase
 
         if (result == Application.Interfaces.ResultBook.notFound) return BadRequest("Book Is No Found");
 
-        if (result == Application.Interfaces.ResultBook.Error) return BadRequest("Error In Add Book");
+        if (result == Application.Interfaces.ResultBook.Error) return BadRequest("Error In Delete Book");
 
         return Ok("Success");
     }
@@ -69,7 +69,7 @@ public class BookController : ControllerBase
 
         if (result == Application.Interfaces.ResultBook.notFound) return BadRequest("Book Is No Found");
 
-        if (result == Application.Interfaces.ResultBook.Error) return BadRequest("Error In Add Book");
+        if (result == Application.Interfaces.ResultBook.Error) return BadRequest("Error In Update Book");
 
         return Ok("Success");
     }
