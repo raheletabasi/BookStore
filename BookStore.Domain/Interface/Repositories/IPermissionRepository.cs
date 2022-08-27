@@ -5,6 +5,7 @@ namespace BookStore.Domain.Repositories;
 
 public interface IPermissionRepository : IGenericRepository<Permission>
 {
-    public Task IsDuplicate(string title, long parent);
-    public Task IsDuplicate(Guid id, string title, long parent));
+    public Task<bool> IsDuplicate(string title, Guid? permissionId);
+    public Task<bool> IsDuplicate(Guid id, string title, Guid? permissionId);
+    Task<IEnumerable<Permission>> GetAllChildByPermissionId(Guid permissionId);
 }
