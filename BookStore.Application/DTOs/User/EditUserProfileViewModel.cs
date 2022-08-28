@@ -1,7 +1,7 @@
 ﻿using BookStore.Domain.Entity;
 using System.ComponentModel.DataAnnotations;
 
-namespace BookStore.Application.DTOs;
+namespace BookStore.Application.DTOs.User;
 
 public class EditUserProfileViewModel
 {
@@ -44,7 +44,7 @@ public class EditUserProfileViewModel
 }
 
 public enum ResultEditUserProfile
-{ 
+{
     success,
     notFound,
     error

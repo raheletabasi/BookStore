@@ -1,4 +1,5 @@
-﻿using BookStore.Application.DTOs;
+﻿using BookStore.Application.DTOs.Common;
+using BookStore.Application.DTOs.User;
 using BookStore.Application.Interfaces;
 using BookStore.Application.Security;
 using BookStore.Domain.Entity;
@@ -67,6 +68,23 @@ public class UserService : IUserService
         {
             return ResultEditUserProfile.error;
         }
+    }
+
+    public async Task<UserFilterViewModel> FilterUsers(UserFilterViewModel filter)
+    {
+        var query = _unitOfWork.Users.GetAllAsync().Result;
+
+        if (!string.IsNullOrEmpty(filter.UserName))
+        {
+            query = query.Where(c => c.UserName == filter.UserName);
+        }
+
+        #region paging
+        var pager = Pager.Build(filter.PageId, query.Count(), filter.TakeEntity, filter.CountForShowAfterAndBefor);
+        var allData = query.Paging(pager).ToList();
+        #endregion
+
+        return filter.SetPaging(pager).SetUsers(allData);
     }
 
     public async Task<IEnumerable<User>> GetAllUser()

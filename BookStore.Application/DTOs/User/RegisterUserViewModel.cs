@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookStore.Application.DTOs
+namespace BookStore.Application.DTOs.User
 {
     public class RegisterUserViewModel
     {
@@ -42,7 +42,7 @@ namespace BookStore.Application.DTOs
     }
 
     public enum ResultRegisterUser
-    { 
+    {
         success,
         Duplicate,
         Error
