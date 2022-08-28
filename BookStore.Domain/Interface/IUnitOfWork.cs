@@ -1,5 +1,4 @@
-﻿using BookStore.Domain.Interface.Repositories;
-using BookStore.Domain.Repositories;
+﻿using BookStore.Domain.Repositories;
 
 namespace BookStore.Domain.Interface;
 
@@ -9,9 +8,8 @@ public interface IUnitOfWork : IDisposable
     IBookCategoryRepository BookCategories { get; }
     IBookRepository Books { get; }
     ICategoryRepository Categories { get; }
-    IPublisherRepository Publishers { get; }
-    IOrderDetailRepository OrderDetails { get; set; }
-    IOrderRepository Orders { get; set; }
+    IOrderDetailRepository OrderDetails { get; }
+    IOrderRepository Orders { get; }
     IPermissionRepository Permissions { get; }
     IRolePermissionRepository RolePermission { get; }
     IRoleRepository Roles { get; }

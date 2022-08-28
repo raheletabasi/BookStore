@@ -1,5 +1,4 @@
-﻿using BookStore.Domain.Entities;
-using BookStore.Domain.Entity;
+﻿using BookStore.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Infrastructure.Data
@@ -15,7 +14,6 @@ namespace BookStore.Infrastructure.Data
         public DbSet<BookCategory> BookCategory { get; set; }
         public DbSet<Book> Book { get; set; }
         public DbSet<Category> Category { get; set; }
-        public DbSet<Publisher> Publisher { get; set; }
         public DbSet<OrderDetail> OrderDetail { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<Permission> Permission { get; set; }

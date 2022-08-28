@@ -36,11 +36,6 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         return await _entity.FirstOrDefaultAsync(s => s.Id.Equals(id));
     }
 
-    public Task<bool> IsExist(Guid id)
-    {
-        return Task.FromResult(_entity.Any(x => x.Id.Equals(id)));
-    }
-
     public async Task Save()
     {
         _context.SaveChanges();
@@ -51,7 +46,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         throw new NotImplementedException();
     }
 
-    public async Task UpdateAsync(TEntity entity)
+    public async Task UpdaeAsync(TEntity entity)
     {
         _entity.Update(entity);
     }
