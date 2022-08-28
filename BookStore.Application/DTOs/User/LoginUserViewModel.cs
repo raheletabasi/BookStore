@@ -1,30 +1,33 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookStore.Application.DTOs;
+namespace BookStore.Application.DTOs.User;
 
-public class ChangePasswordViewModel
+public class LoginUserViewModel
 {
-    [Display(Name = "رمزعبور فعلی")]
+    [Display(Name = "نام کاربری")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     [MaxLength(200, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
-    public string CurrentPassword { get; set; }
+    public string UserName { get; set; }
 
-    [Display(Name = "رمزعبور جدید")]
+    [Display(Name = "ایمیل")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     [MaxLength(200, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
-    public string NewPassword { get; set; }
+    public string Email { get; set; }
 
-    [Display(Name = "تکرار رمزعبور جدید")]
+    [Display(Name = "رمزعبور")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     [MaxLength(200, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
-    [Compare("Password", ErrorMessage = "کلمه ی عبور با هم مغایرت دارند")]
-    public string ReNewPassword { get; set; }
+    public string Password { get; set; }
+
+    [Display(Name = "مرا به خاطر بسپار")]
+    public bool RememberMe { get; set; }
 }
 
-public enum ResultChangePassword
-{ 
+public enum ResultLoginUser
+{
     success,
-    equalPassword,
     notFound,
-    error
+    inactive,
+    block,
+    Error
 }

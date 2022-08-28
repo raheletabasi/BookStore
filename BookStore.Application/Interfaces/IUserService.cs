@@ -1,4 +1,4 @@
-﻿using BookStore.Application.DTOs;
+﻿using BookStore.Application.DTOs.User;
 using BookStore.Domain.Entity;
 
 namespace BookStore.Application.Interfaces;
@@ -11,5 +11,5 @@ public interface IUserService
     Task<ResultLoginUser> LoginUser(LoginUserViewModel loginUserViewModel);
     Task<ResultEditUserProfile> EditProfile(Guid userId, EditUserProfileViewModel editUserProfileViewModel);
     Task<ResultChangePassword> ChangePassword(Guid userId, ChangePasswordViewModel changePasswordViewModel);
-
+    Task<UserFilterViewModel> FilterUsers(UserFilterViewModel filter);
 }
