@@ -1,4 +1,5 @@
 ﻿using BookStore.Domain.Interface;
+using BookStore.Domain.Interface.Repositories;
 using BookStore.Domain.Repositories;
 using BookStore.Infrastructure.Data;
 
@@ -21,9 +22,11 @@ public class UnitOfWork : IUnitOfWork, IDisposable
 
     public ICategoryRepository Categories { get; }
 
-    public IOrderDetailRepository OrderDetails { get; }
+    public IPublisherRepository Publishers { get; }
 
-    public IOrderRepository Orders { get; }
+    public IOrderDetailRepository OrderDetails { get; set; }
+
+    public IOrderRepository Orders { get; set; }
 
     public IPermissionRepository Permissions { get; }
 

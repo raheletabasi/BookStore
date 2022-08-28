@@ -8,7 +8,7 @@ public class AuthorEntityTypeConfiguration : IEntityTypeConfiguration<Author>
 {
     public void Configure(EntityTypeBuilder<Author> builder)
     {
-        builder.ToTable("Book");
+        builder.ToTable("Author");
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.FirstName).IsRequired();
