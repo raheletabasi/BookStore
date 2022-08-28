@@ -13,12 +13,10 @@ public class BookViewModel
 
     [Display(Name = "نویسنده")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
-    [MaxLength(500, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
     public Guid AuthorId { get; set; }
 
     [Display(Name = "ناشر")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
-    [MaxLength(500, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
     public Guid PublisherId { get; set; }
 
     [Display(Name = "توضیحات")]
@@ -39,6 +37,7 @@ public class BookViewModel
 public enum ResultBook
 {
     success,
-    Duplicate,
+    duplicate,
+    notFound,
     Error
 }
