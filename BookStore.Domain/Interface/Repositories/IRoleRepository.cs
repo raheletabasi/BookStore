@@ -5,6 +5,6 @@ namespace BookStore.Domain.Repositories;
 
 public interface IRoleRepository : IGenericRepository<Role>
 {
-    public Task IsDuplicate(string title);
-    public Task IsDuplicate(Guid id, string title);
+    public Task<bool> IsDuplicate(string title);
+    public Task<bool> IsDuplicate(Guid id, string title);
 }

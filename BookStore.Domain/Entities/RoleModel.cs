@@ -5,7 +5,7 @@ namespace BookStore.Domain.Entity;
 public class Role : AuditableBaseEntity
 {
     public string Title { get; set; }
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     #region Relations
 
