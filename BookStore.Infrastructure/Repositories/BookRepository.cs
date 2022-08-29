@@ -5,7 +5,7 @@ using BookStore.Infrastructure.GenericRepository;
 
 namespace BookStore.Infrastructure.Repositories;
 
-internal class BookRepository : GenericRepository<Book>, IBookRepository
+public class BookRepository : GenericRepository<Book>, IBookRepository
 {
     private readonly BookStoreContext _context;
 

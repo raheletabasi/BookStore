@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Infrastructure.Repositories;
 
-internal class OrderDetailRepository : GenericRepository<OrderDetail>, IOrderDetailRepository
+public class OrderDetailRepository : GenericRepository<OrderDetail>, IOrderDetailRepository
 {
     private readonly BookStoreContext _context;
 

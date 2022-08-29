@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Infrastructure.Repositories;
 
-internal class UserRepository : GenericRepository<User>, IUserRepository
+public class UserRepository : GenericRepository<User>, IUserRepository
 {
     private readonly BookStoreContext _context;
 

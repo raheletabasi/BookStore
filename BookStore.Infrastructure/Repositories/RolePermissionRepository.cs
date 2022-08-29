@@ -5,7 +5,7 @@ using BookStore.Infrastructure.GenericRepository;
 
 namespace BookStore.Infrastructure.Repositories;
 
-internal class RolePermissionRepository : GenericRepository<RolePermission>, IRolePermissionRepository
+public class RolePermissionRepository : GenericRepository<RolePermission>, IRolePermissionRepository
 {
     private readonly BookStoreContext _context;
 

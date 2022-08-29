@@ -1,12 +1,11 @@
 ﻿using BookStore.Domain.Entity;
 using BookStore.Domain.Repositories;
-using BookStore.Domain.Repositories.Generic;
 using BookStore.Infrastructure.Data;
 using BookStore.Infrastructure.GenericRepository;
 
 namespace BookStore.Infrastructure.Repositories;
 
-internal class UserRoleRepository : GenericRepository<UserRole>, IUserRoleRepository
+public class UserRoleRepository : GenericRepository<UserRole>, IUserRoleRepository
 {
     private readonly BookStoreContext _context;
     public UserRoleRepository(BookStoreContext context) : base(context)
