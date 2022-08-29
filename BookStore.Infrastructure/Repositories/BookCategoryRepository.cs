@@ -17,11 +17,14 @@ internal class BookCategoryRepository : GenericRepository<BookCategory>, IBookCa
     public async Task<bool> IsDuplicate(Guid bookId, Guid categoryId)
     {
         return await Task.FromResult(_context.BookCategory.Any(x => x.BookId.Equals(bookId)
-            && x.CategoryId.Equals(categoryId)))
+            && x.CategoryId.Equals(categoryId)));
     }
 
-    public Task<bool> IsDuplicate(Guid id, Guid bookId, Guid catrgoryId)
+    public async Task<bool> IsDuplicate(Guid id, Guid bookId, Guid categoryId)
     {
-        throw new NotImplementedException();
+        return await Task.FromResult(_context.BookCategory.Any(x => 
+        !x.Id.Equals(id) &&
+        x.BookId.Equals(bookId) && 
+        x.CategoryId.Equals(categoryId)));
     }
 }
