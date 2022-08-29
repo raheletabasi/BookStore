@@ -27,7 +27,7 @@ public class UserService : IUserService
                 if (user.Password != newPass)
                 {
                     user.Password = newPass;
-                    await _unitOfWork.Users.UpdaeAsync(user);
+                    await _unitOfWork.Users.UpdateAsync(user);
                     await _unitOfWork.Commit();
 
                     return ResultChangePassword.success;
@@ -59,7 +59,7 @@ public class UserService : IUserService
             user.Address = editUserProfileViewModel.Address;
             user.PostalCode = editUserProfileViewModel.PostalCode;
 
-            await _unitOfWork.Users.UpdaeAsync(user);
+            await _unitOfWork.Users.UpdateAsync(user);
             await _unitOfWork.Commit();
 
             return ResultEditUserProfile.success;
