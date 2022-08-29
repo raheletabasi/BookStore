@@ -14,7 +14,7 @@ public class BookEntityTypeConfiguration : IEntityTypeConfiguration<Book>
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.AuthorId).IsRequired();
         builder.Property(x => x.Publisher).IsRequired();
-        builder.Property(x => x.price).IsRequired();
+        builder.Property(x => x.Price).IsRequired();
         builder.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
         builder.Property(x => x.SearchExperssion).HasComputedColumnSql("CONCAT([Name] , '|' , [Authors] , '|' , [Publisher])", stored: true);
 
