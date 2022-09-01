@@ -9,5 +9,5 @@ public interface ICategoryService
     Task<ResultCategory> UpdateCategory(CategoryViewModel CategoryviewModel);
     Task<ResultCategory> DeleteCategory(Guid id);
     Task<Category> GetCategoryById(Guid id);
-    Task<IEnumerable<Category>> GetAllCategory();
+    List<Category> GetAllCategory();
 }
