@@ -26,9 +26,9 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         _entity.Remove(entity);
     }
 
-    public Task<IEnumerable<TEntity>> GetAllAsync()
+    public List<TEntity> GetAllAsync()
     {
-        return (Task<IEnumerable<TEntity>>)_entity.AsAsyncEnumerable();
+        return _entity.ToList();
     }
 
     public async Task<TEntity> GetByIdAsync(Guid id)
