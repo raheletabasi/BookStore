@@ -24,6 +24,7 @@ public class AuthorViewModel
 public enum ResultAuthor
 {
     success,
-    Duplicate,
+    duplicate,
+    notFound,
     Error
 }

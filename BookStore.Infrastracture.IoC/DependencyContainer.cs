@@ -14,7 +14,6 @@ public class DependencyContainer
     {
         #region Repository
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
         services.AddScoped<IAuthorRepository,AuthorRepository>();
         services.AddScoped<IBookCategoryRepository, BookCategoryRepository>();
         services.AddScoped<IBookRepository, BookRepository>();
