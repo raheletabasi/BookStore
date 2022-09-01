@@ -1,17 +1,17 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entity;
-using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class OrderDetailService : IOrderDetailService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IOrderDetailRepository _orderDetailRepository;
 
-    public OrderDetailService(IUnitOfWork unitOfWork)
+    public OrderDetailService(IOrderDetailRepository orderDetailRepository)
     {
-        _unitOfWork = unitOfWork;
+        _orderDetailRepository = orderDetailRepository;
     }
 
     public async Task<ResultOrderDetail> AddOrderDetail(OrderDetailViewModel orderDetailViewModel)
@@ -26,8 +26,8 @@ public class OrderDetailService : IOrderDetailService
                 Price = orderDetailViewModel.Price,
             };
 
-            await _unitOfWork.OrderDetails.AddAsync(orderDetail);
-            await _unitOfWork.Commit();
+            await _orderDetailRepository.AddAsync(orderDetail);
+            await _orderDetailRepository.Save();
 
             return ResultOrderDetail.success;
             
@@ -42,12 +42,12 @@ public class OrderDetailService : IOrderDetailService
     {
         try
         {
-            var isExist = await _unitOfWork.OrderDetails.IsExist(id);
+            var isExist = await _orderDetailRepository.IsExist(id);
             if (isExist)
             {
-                var orderDetail = await _unitOfWork.OrderDetails.GetByIdAsync(id);
-                await _unitOfWork.OrderDetails.DeleteAsync(orderDetail);
-                await _unitOfWork.Commit();
+                var orderDetail = await _orderDetailRepository.GetByIdAsync(id);
+                await _orderDetailRepository.DeleteAsync(orderDetail);
+                await _orderDetailRepository.Save();
 
                 return ResultOrderDetail.success;
             }
@@ -61,14 +61,14 @@ public class OrderDetailService : IOrderDetailService
 
     public async Task<IEnumerable<OrderDetail>> GetOrderDetailByOrderId(Guid orderId)
     {
-        return await _unitOfWork.OrderDetails.GetOrderDetailByOrderId(orderId);
+        return await _orderDetailRepository.GetOrderDetailByOrderId(orderId);
     }
 
     public async Task<ResultOrderDetail> UpdateOrderDetail(OrderDetailViewModel orderDetailViewModel)
     {
         try
         {
-            var isExist = await _unitOfWork.OrderDetails.IsExist(orderDetailViewModel.Id);
+            var isExist = await _orderDetailRepository.IsExist(orderDetailViewModel.Id);
             if (isExist)
             {                
                 var orderDetail = new OrderDetail()
@@ -79,8 +79,8 @@ public class OrderDetailService : IOrderDetailService
                     Price = orderDetailViewModel.Price
                 };
 
-                await _unitOfWork.OrderDetails.UpdateAsync(orderDetail);
-                await _unitOfWork.Commit();
+                await _orderDetailRepository.UpdateAsync(orderDetail);
+                await _orderDetailRepository.Save();
 
                 return ResultOrderDetail.success;                
             }

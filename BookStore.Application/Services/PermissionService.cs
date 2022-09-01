@@ -1,24 +1,24 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entity;
-using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class PermissionService : IPermissionService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPermissionRepository _permissionRepository;
 
-    public PermissionService(IUnitOfWork unitOfWork)
+    public PermissionService(IPermissionRepository permissionRepository)
     {
-        _unitOfWork = unitOfWork;
+        _permissionRepository = permissionRepository;
     }
 
     public async Task<ResultPermission> AddPermission(PermissionViewModel permissionViewModel)
     {
         try
         {
-            var isDuplicate = await _unitOfWork.Permissions.IsDuplicate(permissionViewModel.Title, permissionViewModel.PermissionId);
+            var isDuplicate = await _permissionRepository.IsDuplicate(permissionViewModel.Title, permissionViewModel.PermissionId);
 
             if (!isDuplicate)
             {
@@ -28,8 +28,8 @@ public class PermissionService : IPermissionService
                     PermissionId = permissionViewModel.PermissionId
                 };
 
-                await _unitOfWork.Permissions.AddAsync(permission);
-                await _unitOfWork.Commit();
+                await _permissionRepository.AddAsync(permission);
+                await _permissionRepository.Save();
 
                 return ResultPermission.success;
             }
@@ -45,12 +45,12 @@ public class PermissionService : IPermissionService
     {
         try
         {
-            var isExist = await _unitOfWork.Permissions.IsExist(id);
+            var isExist = await _permissionRepository.IsExist(id);
             if (isExist)
             {
-                var permission = await _unitOfWork.Permissions.GetByIdAsync(id);
-                await _unitOfWork.Permissions.DeleteAsync(permission);
-                await _unitOfWork.Commit();
+                var permission = await _permissionRepository.GetByIdAsync(id);
+                await _permissionRepository.DeleteAsync(permission);
+                await _permissionRepository.Save();
 
                 return ResultPermission.success;
             }
@@ -64,27 +64,27 @@ public class PermissionService : IPermissionService
 
     public async Task<IEnumerable<Permission>> GetAllChildByPermissionId(Guid permissionId)
     {
-        return await _unitOfWork.Permissions.GetAllChildByPermissionId(permissionId);
+        return await _permissionRepository.GetAllChildByPermissionId(permissionId);
     }
 
-    public async Task<IEnumerable<Permission>> GetAllPermission()
+    public List<Permission> GetAllPermission()
     {
-        return await _unitOfWork.Permissions.GetAllAsync();
+        return _permissionRepository.GetAllAsync();
     }
 
     public async Task<Permission> GetPermissionById(Guid id)
     {
-        return await _unitOfWork.Permissions.GetByIdAsync(id);
+        return await _permissionRepository.GetByIdAsync(id);
     }
 
     public async Task<ResultPermission> UpdatePermission(PermissionViewModel permissionViewModel)
     {
         try
         {
-            var isExist = await _unitOfWork.Permissions.IsExist(permissionViewModel.Id);
+            var isExist = await _permissionRepository.IsExist(permissionViewModel.Id);
             if (isExist)
             {
-                var isDuplicate = await _unitOfWork.Permissions.IsDuplicate(
+                var isDuplicate = await _permissionRepository.IsDuplicate(
                     permissionViewModel.Id, permissionViewModel.Title, permissionViewModel.PermissionId);
 
                 if (!isDuplicate)
@@ -94,8 +94,8 @@ public class PermissionService : IPermissionService
                         Title = permissionViewModel.Title
                     };
 
-                    await _unitOfWork.Permissions.UpdateAsync(permission);
-                    await _unitOfWork.Commit();
+                    await _permissionRepository.UpdateAsync(permission);
+                    await _permissionRepository.Save();
 
                     return ResultPermission.success;
                 }

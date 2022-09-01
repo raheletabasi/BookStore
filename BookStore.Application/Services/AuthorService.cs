@@ -1,24 +1,24 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entity;
-using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class AuthorService : IAuthorService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuthorRepository _authorRepository;
 
-    public AuthorService(IUnitOfWork unitOfWork)
+    public AuthorService(IAuthorRepository authorRepository)
     {
-        _unitOfWork = unitOfWork;
+        _authorRepository = authorRepository;
     }
 
-    public async Task<Interfaces.ResultAuthor> AddAuthor(AuthorViewModel authorViewModel)
+    public async Task<ResultAuthor> AddAuthor(AuthorViewModel authorViewModel)
     {
         try
         {
-            var isDuplicate = await _unitOfWork.Authors.IsDuplicate(authorViewModel.FirstName, authorViewModel.LastName);
+            var isDuplicate = await _authorRepository.IsDuplicate(authorViewModel.FirstName, authorViewModel.LastName);
 
             if (!isDuplicate)
             {
@@ -29,58 +29,58 @@ public class AuthorService : IAuthorService
                     Email = authorViewModel.Email,
                 };
 
-                await _unitOfWork.Authors.AddAsync(newAuthor);
-                await _unitOfWork.Commit();
+                await _authorRepository.AddAsync(newAuthor);
+                await _authorRepository.Save();
 
-                return Interfaces.ResultAuthor.success;
+                return ResultAuthor.success;
             }
-            return Interfaces.ResultAuthor.duplicate;
+            return ResultAuthor.duplicate;
         }
         catch
         {
-            return Interfaces.ResultAuthor.Error;
+            return ResultAuthor.Error;
         }
     }
 
-    public async Task<Interfaces.ResultAuthor> DeleteAuthor(Guid id)
+    public async Task<ResultAuthor> DeleteAuthor(Guid id)
     {
         try
         {
-            var isExist = await _unitOfWork.Authors.IsExist(id);
+            var isExist = await _authorRepository.IsExist(id);
             if (isExist)
             {
-                var author = await _unitOfWork.Authors.GetByIdAsync(id);
-                await _unitOfWork.Authors.DeleteAsync(author);
-                await _unitOfWork.Commit();
+                var author = await _authorRepository.GetByIdAsync(id);
+                await _authorRepository.DeleteAsync(author);
+                await _authorRepository.Save();
 
-                return Interfaces.ResultAuthor.success;
+                return ResultAuthor.success;
             }
-            return Interfaces.ResultAuthor.notFound;
+            return ResultAuthor.notFound;
         }
         catch
         {
-            return Interfaces.ResultAuthor.Error;
+            return ResultAuthor.Error;
         }
     }
 
-    public async Task<IEnumerable<Author>> GetAllAuthors()
+    public List<Author> GetAllAuthors()
     {
-        return await _unitOfWork.Authors.GetAllAsync();
+        return _authorRepository.GetAllAsync();
     }
 
     public async Task<Author> GetAuthorById(Guid id)
     {
-        return await _unitOfWork.Authors.GetByIdAsync(id);
+        return await _authorRepository.GetByIdAsync(id);
     }
 
-    public async Task<Interfaces.ResultAuthor> UpdateAuthor(AuthorViewModel authorViewModel)
+    public async Task<ResultAuthor> UpdateAuthor(AuthorViewModel authorViewModel)
     {
         try
         {
-            var isExist = await _unitOfWork.Authors.IsExist(authorViewModel.Id);
+            var isExist = await _authorRepository.IsExist(authorViewModel.Id);
             if (isExist)
             {
-                var isDuplicate = await _unitOfWork.Authors.IsDuplicate(
+                var isDuplicate = await _authorRepository.IsDuplicate(
                     authorViewModel.Id, authorViewModel.FirstName, authorViewModel.LastName);
 
                 if (!isDuplicate)
@@ -92,18 +92,18 @@ public class AuthorService : IAuthorService
                         Email = authorViewModel.Email
                     };
 
-                    await _unitOfWork.Authors.UpdateAsync(author);
-                    await _unitOfWork.Commit();
+                    await _authorRepository.UpdateAsync(author);
+                    await _authorRepository.Save();
 
-                    return Interfaces.ResultAuthor.success;
+                    return ResultAuthor.success;
                 }
-                return Interfaces.ResultAuthor.duplicate;
+                return ResultAuthor.duplicate;
             }
-            return Interfaces.ResultAuthor.notFound;
+            return ResultAuthor.notFound;
         }
         catch
         {
-            return Interfaces.ResultAuthor.Error;
+            return ResultAuthor.Error;
         }
     }
 }

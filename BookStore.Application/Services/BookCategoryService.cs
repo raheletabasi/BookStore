@@ -1,24 +1,24 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entity;
-using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class BookCategoryService : IBookCategoryService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBookCategoryRepository _bookCategoryRepository;
 
-    public BookCategoryService(IUnitOfWork unitOfWork)
+    public BookCategoryService(IBookCategoryRepository bookCategoryRepository)
     {
-        _unitOfWork = unitOfWork;
+        _bookCategoryRepository = bookCategoryRepository;
     }
 
     public async Task<ResultBookCategory> AddBookCategory(BookCategoryViewModel bookCategoryViewModel)
     {
         try
         {
-            var isDuplicate = await _unitOfWork.BookCategories.IsDuplicate(bookCategoryViewModel.BookId, bookCategoryViewModel.CategoryId);
+            var isDuplicate = await _bookCategoryRepository.IsDuplicate(bookCategoryViewModel.BookId, bookCategoryViewModel.CategoryId);
 
             if (!isDuplicate)
             {
@@ -28,8 +28,8 @@ public class BookCategoryService : IBookCategoryService
                     CategoryId = bookCategoryViewModel.CategoryId
                 };
 
-                await _unitOfWork.BookCategories.AddAsync(bookCategory);
-                await _unitOfWork.Commit();
+                await _bookCategoryRepository.AddAsync(bookCategory);
+                await _bookCategoryRepository.Save();
 
                 return ResultBookCategory.success;
             }
@@ -45,12 +45,12 @@ public class BookCategoryService : IBookCategoryService
     {
         try
         {
-            var isExist = await _unitOfWork.BookCategories.IsExist(id);
+            var isExist = await _bookCategoryRepository.IsExist(id);
             if (isExist)
             {
-                var bookCategory = await _unitOfWork.BookCategories.GetByIdAsync(id);
-                await _unitOfWork.BookCategories.DeleteAsync(bookCategory);
-                await _unitOfWork.Commit();
+                var bookCategory = await _bookCategoryRepository.GetByIdAsync(id);
+                await _bookCategoryRepository.DeleteAsync(bookCategory);
+                await _bookCategoryRepository.Save();
 
                 return ResultBookCategory.success;
             }
@@ -62,24 +62,24 @@ public class BookCategoryService : IBookCategoryService
         }
     }
 
-    public async Task<IEnumerable<BookCategory>> GetAllBookCategory()
+    public List<BookCategory> GetAllBookCategory()
     {
-        return await _unitOfWork.BookCategories.GetAllAsync();
+        return _bookCategoryRepository.GetAllAsync();
     }
 
     public async Task<BookCategory> GetBookCategoryById(Guid id)
     {
-        return await _unitOfWork.BookCategories.GetByIdAsync(id);
+        return await _bookCategoryRepository.GetByIdAsync(id);
     }
 
     public async Task<ResultBookCategory> UpdateBookCategory(BookCategoryViewModel bookCategoryviewModel)
     {
         try
         {
-            var isExist = await _unitOfWork.BookCategories.IsExist(bookCategoryviewModel.Id);
+            var isExist = await _bookCategoryRepository.IsExist(bookCategoryviewModel.Id);
             if (isExist)
             {
-                var isDuplicate = await _unitOfWork.BookCategories.IsDuplicate(
+                var isDuplicate = await _bookCategoryRepository.IsDuplicate(
                     bookCategoryviewModel.Id, bookCategoryviewModel.BookId, bookCategoryviewModel.CategoryId);
 
                 if (!isDuplicate)
@@ -90,8 +90,8 @@ public class BookCategoryService : IBookCategoryService
                         CategoryId = bookCategoryviewModel.CategoryId
                     };
 
-                    await _unitOfWork.BookCategories.UpdateAsync(bookCategory);
-                    await _unitOfWork.Commit();
+                    await _bookCategoryRepository.UpdateAsync(bookCategory);
+                    await _bookCategoryRepository.Save();
 
                     return ResultBookCategory.success;
                 }

@@ -1,24 +1,24 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entity;
-using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class RolePermissionService : IRolePermissionService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IRolePermissionRepository _rolePermissionRepository;
 
-    public RolePermissionService(IUnitOfWork unitOfWork)
+    public RolePermissionService(IRolePermissionRepository rolePermissionRepository)
     {
-        _unitOfWork = unitOfWork;
+        _rolePermissionRepository = rolePermissionRepository;
     }
 
     public async Task<ResultRolePermission> AddRolePermission(RolePermissionViewModel rolePermissionViewModel)
     {
         try
         {
-            var isDuplicate = await _unitOfWork.RolePermission.IsDuplicate(rolePermissionViewModel.RoleId, rolePermissionViewModel.PermissionId);
+            var isDuplicate = await _rolePermissionRepository.IsDuplicate(rolePermissionViewModel.RoleId, rolePermissionViewModel.PermissionId);
 
             if (!isDuplicate)
             {
@@ -28,8 +28,8 @@ public class RolePermissionService : IRolePermissionService
                     PermissionId = rolePermissionViewModel.PermissionId
                 };
 
-                await _unitOfWork.RolePermission.AddAsync(rolePermission);
-                await _unitOfWork.Commit();
+                await _rolePermissionRepository.AddAsync(rolePermission);
+                await _rolePermissionRepository.Save();
 
                 return ResultRolePermission.success;
             }
@@ -45,12 +45,12 @@ public class RolePermissionService : IRolePermissionService
     {
         try
         {
-            var isExist = await _unitOfWork.RolePermission.IsExist(id);
+            var isExist = await _rolePermissionRepository.IsExist(id);
             if (isExist)
             {
-                var rolePermissionCategory = await _unitOfWork.RolePermission.GetByIdAsync(id);
-                await _unitOfWork.RolePermission.DeleteAsync(rolePermissionCategory);
-                await _unitOfWork.Commit();
+                var rolePermissionCategory = await _rolePermissionRepository.GetByIdAsync(id);
+                await _rolePermissionRepository.DeleteAsync(rolePermissionCategory);
+                await _rolePermissionRepository.Save();
 
                 return ResultRolePermission.success;
             }
@@ -62,24 +62,24 @@ public class RolePermissionService : IRolePermissionService
         }
     }
 
-    public async Task<IEnumerable<RolePermission>> GetAllRolePermission()
+    public List<RolePermission> GetAllRolePermission()
     {
-        return await _unitOfWork.RolePermission.GetAllAsync();
+        return _rolePermissionRepository.GetAllAsync();
     }
 
     public async Task<RolePermission> GetRolePermissionbyRoleId(Guid roleId)
     {
-        return await _unitOfWork.RolePermission.GetByIdAsync(roleId);
+        return await _rolePermissionRepository.GetByIdAsync(roleId);
     }
 
     public async Task<ResultRolePermission> UpdateRolePermission(RolePermissionViewModel rolePermissionViewModel)
     {
         try
         {
-            var isExist = await _unitOfWork.RolePermission.IsExist(rolePermissionViewModel.Id);
+            var isExist = await _rolePermissionRepository.IsExist(rolePermissionViewModel.Id);
             if (isExist)
             {
-                var isDuplicate = await _unitOfWork.RolePermission.IsDuplicate(
+                var isDuplicate = await _rolePermissionRepository.IsDuplicate(
                     rolePermissionViewModel.Id, rolePermissionViewModel.RoleId, rolePermissionViewModel.PermissionId);
 
                 if (!isDuplicate)
@@ -90,8 +90,8 @@ public class RolePermissionService : IRolePermissionService
                         PermissionId = rolePermissionViewModel.PermissionId
                     };
 
-                    await _unitOfWork.RolePermission.UpdateAsync(rolePermission);
-                    await _unitOfWork.Commit();
+                    await _rolePermissionRepository.UpdateAsync(rolePermission);
+                    await _rolePermissionRepository.Save();
 
                     return ResultRolePermission.success;
                 }
