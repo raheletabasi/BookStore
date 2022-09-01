@@ -1,24 +1,24 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entity;
-using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public CategoryService(IUnitOfWork unitOfWork)
+    public CategoryService(ICategoryRepository categoryRepository)
     {
-        _unitOfWork = unitOfWork;
+        _categoryRepository = categoryRepository;
     }
 
     public async Task<ResultCategory> AddCategory(CategoryViewModel categoryViewModel)
     {
         try
         {
-            var isDuplicate = await _unitOfWork.Categories.IsDuplicate(categoryViewModel.Title);
+            var isDuplicate = await _categoryRepository.IsDuplicate(categoryViewModel.Title);
 
             if (!isDuplicate)
             {
@@ -27,8 +27,8 @@ public class CategoryService : ICategoryService
                     Title = categoryViewModel.Title
                 };
 
-                await _unitOfWork.Categories.AddAsync(category);
-                await _unitOfWork.Commit();
+                await _categoryRepository.AddAsync(category);
+                await _categoryRepository.Save();
 
                 return ResultCategory.success;
             }
@@ -44,12 +44,12 @@ public class CategoryService : ICategoryService
     {
         try
         {
-            var isExist = await _unitOfWork.Categories.IsExist(id);
+            var isExist = await _categoryRepository.IsExist(id);
             if (isExist)
             {
-                var category = await _unitOfWork.Categories.GetByIdAsync(id);
-                await _unitOfWork.Categories.DeleteAsync(category);
-                await _unitOfWork.Commit();
+                var category = await _categoryRepository.GetByIdAsync(id);
+                await _categoryRepository.DeleteAsync(category);
+                await _categoryRepository.Save();
 
                 return ResultCategory.success;
             }
@@ -61,24 +61,24 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<IEnumerable<Category>> GetAllCategory()
+    public List<Category> GetAllCategory()
     {
-        return await _unitOfWork.Categories.GetAllAsync();
+        return _categoryRepository.GetAllAsync();
     }
 
     public async Task<Category> GetCategoryById(Guid id)
     {
-        return await _unitOfWork.Categories.GetByIdAsync(id);
+        return await _categoryRepository.GetByIdAsync(id);
     }
 
     public async Task<ResultCategory> UpdateCategory(CategoryViewModel CategoryviewModel)
     {
         try
         {
-            var isExist = await _unitOfWork.Categories.IsExist(CategoryviewModel.Id);
+            var isExist = await _categoryRepository.IsExist(CategoryviewModel.Id);
             if (isExist)
             {
-                var isDuplicate = await _unitOfWork.Categories.IsDuplicate(
+                var isDuplicate = await _categoryRepository.IsDuplicate(
                     CategoryviewModel.Id, CategoryviewModel.Title);
 
                 if (!isDuplicate)
@@ -88,8 +88,8 @@ public class CategoryService : ICategoryService
                         Title = CategoryviewModel.Title
                     };
 
-                    await _unitOfWork.Categories.UpdateAsync(category);
-                    await _unitOfWork.Commit();
+                    await _categoryRepository.UpdateAsync(category);
+                    await _categoryRepository.Save();
 
                     return ResultCategory.success;
                 }

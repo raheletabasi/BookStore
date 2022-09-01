@@ -8,6 +8,6 @@ public interface IUserRoleService
     Task<ResultUserRole> AddUserRole(UserRoleViewModel userRoleViewModel);
     Task<ResultUserRole> DeleteUserRole(Guid id);
     Task<ResultUserRole> UpdateUserRole(UserRoleViewModel userRoleViewModel);
-    Task<IEnumerable<UserRole>> GetAllUserRole();
+    List<UserRole> GetAllUserRole();
     Task<UserRole> GetRolesbyUserId(Guid userId);
 }

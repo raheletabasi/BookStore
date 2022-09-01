@@ -8,6 +8,6 @@ public interface IRolePermissionService
     Task<ResultRolePermission> AddRolePermission(RolePermissionViewModel rolePermissionViewModel);
     Task<ResultRolePermission> DeleteRolePermission(Guid id);
     Task<ResultRolePermission> UpdateRolePermission(RolePermissionViewModel rolePermissionViewModel);
-    Task<IEnumerable<RolePermission>> GetAllRolePermission();
+    List<RolePermission> GetAllRolePermission();
     Task<RolePermission> GetRolePermissionbyRoleId(Guid roleId);
 }

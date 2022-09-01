@@ -1,24 +1,24 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entity;
-using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class UserRoleService : IUserRoleService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserRoleRepository _userRoleRepository;
 
-    public UserRoleService(IUnitOfWork unitOfWork)
+    public UserRoleService(IUserRoleRepository userRoleRepository)
     {
-        _unitOfWork = unitOfWork;
+        _userRoleRepository = userRoleRepository;
     }
 
     public async Task<ResultUserRole> AddUserRole(UserRoleViewModel userRoleViewModel)
     {
         try
         {
-            var isDuplicate = await _unitOfWork.UserRoles.IsDuplicate(userRoleViewModel.UserId, userRoleViewModel.RoleId);
+            var isDuplicate = await _userRoleRepository.IsDuplicate(userRoleViewModel.UserId, userRoleViewModel.RoleId);
 
             if (!isDuplicate)
             {
@@ -28,8 +28,8 @@ public class UserRoleService : IUserRoleService
                     RoleId = userRoleViewModel.RoleId
                 };
 
-                await _unitOfWork.UserRoles.AddAsync(userRole);
-                await _unitOfWork.Commit();
+                await _userRoleRepository.AddAsync(userRole);
+                await _userRoleRepository.Save();
 
                 return ResultUserRole.success;
             }
@@ -45,12 +45,12 @@ public class UserRoleService : IUserRoleService
     {
         try
         {
-            var isExist = await _unitOfWork.UserRoles.IsExist(id);
+            var isExist = await _userRoleRepository.IsExist(id);
             if (isExist)
             {
-                var userRole = await _unitOfWork.UserRoles.GetByIdAsync(id);
-                await _unitOfWork.UserRoles.DeleteAsync(userRole);
-                await _unitOfWork.Commit();
+                var userRole = await _userRoleRepository.GetByIdAsync(id);
+                await _userRoleRepository.DeleteAsync(userRole);
+                await _userRoleRepository.Save();
 
                 return ResultUserRole.success;
             }
@@ -62,24 +62,24 @@ public class UserRoleService : IUserRoleService
         }
     }
 
-    public async Task<IEnumerable<UserRole>> GetAllUserRole()
+    public List<UserRole> GetAllUserRole()
     {
-        return await _unitOfWork.UserRoles.GetAllAsync();
+        return _userRoleRepository.GetAllAsync();
     }
 
     public async Task<UserRole> GetRolesbyUserId(Guid userId)
     {
-        return await _unitOfWork.UserRoles.GetByIdAsync(userId);
+        return await _userRoleRepository.GetByIdAsync(userId);
     }
 
     public async Task<ResultUserRole> UpdateUserRole(UserRoleViewModel userRoleViewModel)
     {
         try
         {
-            var isExist = await _unitOfWork.UserRoles.IsExist(userRoleViewModel.Id);
+            var isExist = await _userRoleRepository.IsExist(userRoleViewModel.Id);
             if (isExist)
             {
-                var isDuplicate = await _unitOfWork.UserRoles.IsDuplicate(
+                var isDuplicate = await _userRoleRepository.IsDuplicate(
                     userRoleViewModel.Id, userRoleViewModel.UserId, userRoleViewModel.RoleId);
 
                 if (!isDuplicate)
@@ -90,8 +90,8 @@ public class UserRoleService : IUserRoleService
                         RoleId = userRoleViewModel.RoleId
                     };
 
-                    await _unitOfWork.UserRoles.UpdateAsync(userRole);
-                    await _unitOfWork.Commit();
+                    await _userRoleRepository.UpdateAsync(userRole);
+                    await _userRoleRepository.Save();
 
                     return ResultUserRole.success;
                 }

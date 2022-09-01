@@ -2,23 +2,24 @@
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entity;
 using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class BookService : IBookService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBookRepository _bookRepository;
 
-    public BookService(IUnitOfWork unitOfWork)
+    public BookService(IBookRepository bookRepository)
     {
-        _unitOfWork = unitOfWork;
+        _bookRepository = bookRepository;
     }
 
-    public async Task<Interfaces.ResultBook> AddBook(BookViewModel bookViewModel)
+    public async Task<ResultBook> AddBook(BookViewModel bookViewModel)
     {
         try
         {
-            var isDuplicate = await _unitOfWork.Books.IsDuplicate(
+            var isDuplicate = await _bookRepository.IsDuplicate(
                 bookViewModel.Name, bookViewModel.AuthorId, bookViewModel.PublisherId);
 
             if (!isDuplicate)
@@ -33,64 +34,64 @@ public class BookService : IBookService
                     IsActive = true
                 };
 
-                await _unitOfWork.Books.AddAsync(book);
-                await _unitOfWork.Commit();
+                await _bookRepository.AddAsync(book);
+                await _bookRepository.Save();
 
-                return Interfaces.ResultBook.success;
+                return ResultBook.success;
             }
-            return Interfaces.ResultBook.duplicate;
+            return ResultBook.duplicate;
         }
         catch
         {
-            return Interfaces.ResultBook.Error;
+            return ResultBook.Error;
         }
     }
 
-    public async Task<Interfaces.ResultBook> DeleteBook(Guid id)
+    public async Task<ResultBook> DeleteBook(Guid id)
     {
         try
         {
-            var isExist = await _unitOfWork.Books.IsExist(id);
+            var isExist = await _bookRepository.IsExist(id);
             if (isExist)
             {
-                var book = await _unitOfWork.Books.GetByIdAsync(id);
-                await _unitOfWork.Books.DeleteAsync(book);
-                await _unitOfWork.Commit();
+                var book = await _bookRepository.GetByIdAsync(id);
+                await _bookRepository.DeleteAsync(book);
+                await _bookRepository.Save();
 
-                return Interfaces.ResultBook.success;
+                return ResultBook.success;
             }
-            return Interfaces.ResultBook.notFound;
+            return ResultBook.notFound;
         }
         catch
         {
-            return Interfaces.ResultBook.Error;
+            return ResultBook.Error;
         }
     }
 
     public async Task<IEnumerable<Book>> GetAllBookByAuthorId(Guid id)
     {
-        var listOfBook = await _unitOfWork.Books.GetAllAsync();
+        var listOfBook = _bookRepository.GetAllAsync();
         return listOfBook.Where(x => x.AuthorId.Equals(id));
     }
 
-    public async Task<IEnumerable<Book>> GetAllBooks()
+    public List<Book> GetAllBooks()
     {
-        return await _unitOfWork.Books.GetAllAsync();
+        return  _bookRepository.GetAllAsync();
     }
 
     public async Task<Book> GetBookById(Guid id)
     {
-        return await _unitOfWork.Books.GetByIdAsync(id);
+        return await _bookRepository.GetByIdAsync(id);
     }
 
-    public async Task<Interfaces.ResultBook> UpdateBook(BookViewModel bookViewModel)
+    public async Task<ResultBook> UpdateBook(BookViewModel bookViewModel)
     {
         try
         {
-            var isExist = await _unitOfWork.Books.IsExist(bookViewModel.Id);
+            var isExist = await _bookRepository.IsExist(bookViewModel.Id);
             if (isExist)
             {
-                var isDuplicate = await _unitOfWork.Books.IsDuplicate(
+                var isDuplicate = await _bookRepository.IsDuplicate(
                     bookViewModel.Id, bookViewModel.Name, bookViewModel.AuthorId, bookViewModel.PublisherId);
 
                 if (!isDuplicate)
@@ -105,18 +106,18 @@ public class BookService : IBookService
                         IsActive = bookViewModel.IsActive
                     };
 
-                    await _unitOfWork.Books.UpdateAsync(book);
-                    await _unitOfWork.Commit();
+                    await _bookRepository.UpdateAsync(book);
+                    await _bookRepository.Save();
 
-                    return Interfaces.ResultBook.success;
+                    return ResultBook.success;
                 }
-                return Interfaces.ResultBook.duplicate;
+                return ResultBook.duplicate;
             }
-            return Interfaces.ResultBook.notFound;
+            return ResultBook.notFound;
         }
         catch
         {
-            return Interfaces.ResultBook.Error;
+            return ResultBook.Error;
         }
     }
 }

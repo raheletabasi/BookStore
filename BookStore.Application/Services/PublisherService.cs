@@ -1,24 +1,24 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
-using BookStore.Domain.Interface;
+using BookStore.Domain.Interface.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class PublisherService : IPublisherService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPublisherRepository _publisherRepository;
 
-    public PublisherService(IUnitOfWork unitOfWork)
+    public PublisherService(IPublisherRepository publisherRepository)
     {
-        _unitOfWork = unitOfWork;
+        _publisherRepository = publisherRepository;
     }
 
     public async Task<ResultPublisher> AddPublisher(PublisherViewModel publisherViewModel)
     {
         try
         {
-            var isDuplicate = await _unitOfWork.Publishers.IsDuplicate(publisherViewModel.Title);
+            var isDuplicate = await _publisherRepository.IsDuplicate(publisherViewModel.Title);
 
             if (!isDuplicate)
             {
@@ -28,8 +28,8 @@ public class PublisherService : IPublisherService
                     Address = publisherViewModel.Address
                 };
 
-                await _unitOfWork.Publishers.AddAsync(publisher);
-                await _unitOfWork.Commit();
+                await _publisherRepository.AddAsync(publisher);
+                await _publisherRepository.Save();
 
                 return ResultPublisher.success;
             }
@@ -45,12 +45,12 @@ public class PublisherService : IPublisherService
     {
         try
         {
-            var isExist = await _unitOfWork.Publishers.IsExist(id);
+            var isExist = await _publisherRepository.IsExist(id);
             if (isExist)
             {
-                var publisher = await _unitOfWork.Publishers.GetByIdAsync(id);
-                await _unitOfWork.Publishers.DeleteAsync(publisher);
-                await _unitOfWork.Commit();
+                var publisher = await _publisherRepository.GetByIdAsync(id);
+                await _publisherRepository.DeleteAsync(publisher);
+                await _publisherRepository.Save();
 
                 return ResultPublisher.success;
             }
@@ -62,24 +62,24 @@ public class PublisherService : IPublisherService
         }
     }
 
-    public async Task<IEnumerable<Publisher>> GetAllPublishers()
+    public List<Publisher> GetAllPublishers()
     {
-        return await _unitOfWork.Publishers.GetAllAsync();
+        return _publisherRepository.GetAllAsync();
     }
 
     public async Task<Publisher> GetPublisherById(Guid id)
     {
-        return await _unitOfWork.Publishers.GetByIdAsync(id);
+        return await _publisherRepository.GetByIdAsync(id);
     }
 
     public async Task<ResultPublisher> UpdatePublisher(PublisherViewModel publisherViewModel)
     {
         try
         {
-            var isExist = await _unitOfWork.Publishers.IsExist(publisherViewModel.Id);
+            var isExist = await _publisherRepository.IsExist(publisherViewModel.Id);
             if (isExist)
             {
-                var isDuplicate = await _unitOfWork.Publishers.IsDuplicate(
+                var isDuplicate = await _publisherRepository.IsDuplicate(
                     publisherViewModel.Id, publisherViewModel.Title);
 
                 if (!isDuplicate)
@@ -90,8 +90,8 @@ public class PublisherService : IPublisherService
                         Address = publisherViewModel.Address
                     };
 
-                    await _unitOfWork.Publishers.UpdateAsync(publisher);
-                    await _unitOfWork.Commit();
+                    await _publisherRepository.UpdateAsync(publisher);
+                    await _publisherRepository.Save();
 
                     return ResultPublisher.success;
                 }

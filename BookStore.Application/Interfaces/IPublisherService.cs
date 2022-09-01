@@ -9,5 +9,5 @@ public interface IPublisherService
     Task<ResultPublisher> UpdatePublisher(PublisherViewModel publisherViewModel);
     Task<ResultPublisher> DeletePublisher(Guid id);
     Task<Publisher> GetPublisherById(Guid id);
-    Task<IEnumerable<Publisher>> GetAllPublishers();
+   List<Publisher> GetAllPublishers();
 }

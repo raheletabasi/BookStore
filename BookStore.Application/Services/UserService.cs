@@ -4,31 +4,32 @@ using BookStore.Application.Interfaces;
 using BookStore.Application.Security;
 using BookStore.Domain.Entity;
 using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class UserService : IUserService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserRepository _userRepository;
 
-    public UserService(IUnitOfWork unitOfWork)
+    public UserService(IUserRepository userRepository)
     {
-        _unitOfWork = unitOfWork;
+        _userRepository = userRepository;
     }
 
     public async Task<ResultChangePassword> ChangePassword(Guid userId, ChangePasswordViewModel changePasswordViewModel)
     {
         try
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(userId);
             if (user != null)
             {
                 var newPass = PasswordHelper.EncodePasswordMd5(changePasswordViewModel.NewPassword);
                 if (user.Password != newPass)
                 {
                     user.Password = newPass;
-                    await _unitOfWork.Users.UpdateAsync(user);
-                    await _unitOfWork.Commit();
+                    await _userRepository.UpdateAsync(user);
+                    await _userRepository.Save();
 
                     return ResultChangePassword.success;
                 }
@@ -46,7 +47,7 @@ public class UserService : IUserService
     {
         try
         {
-            var user = await _unitOfWork.Users.GetByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(userId);
             if (user == null) return ResultEditUserProfile.notFound;
 
             user.FirstName = editUserProfileViewModel.FirstName;
@@ -59,8 +60,8 @@ public class UserService : IUserService
             user.Address = editUserProfileViewModel.Address;
             user.PostalCode = editUserProfileViewModel.PostalCode;
 
-            await _unitOfWork.Users.UpdateAsync(user);
-            await _unitOfWork.Commit();
+            await _userRepository.UpdateAsync(user);
+            await _userRepository.Save();
 
             return ResultEditUserProfile.success;
         }
@@ -70,38 +71,38 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<UserFilterViewModel> FilterUsers(UserFilterViewModel filter)
+    //public async Task<UserFilterViewModel> FilterUsers(UserFilterViewModel filter)
+    //{
+        //var query = _userRepository.GetAllAsync();
+
+        //if (!string.IsNullOrEmpty(filter.UserName))
+        //{
+        //    query = query.Where(c => c.UserName == filter.UserName);
+        //}
+
+        //#region paging
+        //var pager = Pager.Build(filter.PageId, query.Count(), filter.TakeEntity, filter.CountForShowAfterAndBefor);
+        //var allData = query.Paging(pager).ToList();
+        //#endregion
+
+        //return filter.SetPaging(pager).SetUsers(allData);
+    //}
+
+    public List<User> GetAllUser()
     {
-        var query = _unitOfWork.Users.GetAllAsync().Result;
-
-        if (!string.IsNullOrEmpty(filter.UserName))
-        {
-            query = query.Where(c => c.UserName == filter.UserName);
-        }
-
-        #region paging
-        var pager = Pager.Build(filter.PageId, query.Count(), filter.TakeEntity, filter.CountForShowAfterAndBefor);
-        var allData = query.Paging(pager).ToList();
-        #endregion
-
-        return filter.SetPaging(pager).SetUsers(allData);
-    }
-
-    public async Task<IEnumerable<User>> GetAllUser()
-    {
-        return await _unitOfWork.Users.GetAllAsync();
+        return _userRepository.GetAllAsync();
     }
 
     public async Task<User> GetUserByUserId(Guid userId)
     {
-        return await _unitOfWork.Users.GetByIdAsync(userId);
+        return await _userRepository.GetByIdAsync(userId);
     }
 
     public async Task<ResultLoginUser> LoginUser(LoginUserViewModel loginUserViewModel)
     {
         try
         {
-            var user = await _unitOfWork.Users.GetUserByEmail(loginUserViewModel.Email);
+            var user = await _userRepository.GetUserByEmail(loginUserViewModel.Email);
             if (user == null) return ResultLoginUser.notFound;
             if (user.Status == UserStatus.Inactive) return ResultLoginUser.inactive;
             if (user.Status == UserStatus.Block) return ResultLoginUser.block;
@@ -118,7 +119,7 @@ public class UserService : IUserService
     {
         try
         {
-            var isDuplicateUser = await _unitOfWork.Users.IsDuplicate(registerViewModel.UserName, registerViewModel.Email);
+            var isDuplicateUser = await _userRepository.IsDuplicate(registerViewModel.UserName, registerViewModel.Email);
             if (!isDuplicateUser)
             {
                 var newUser = new User
@@ -131,8 +132,8 @@ public class UserService : IUserService
                     Password = PasswordHelper.EncodePasswordMd5(registerViewModel.Password)
                 };
 
-                await _unitOfWork.Users.AddAsync(newUser);
-                await _unitOfWork.Commit();
+                await _userRepository.AddAsync(newUser);
+                await _userRepository.Save();
 
                 return ResultRegisterUser.success;
             }

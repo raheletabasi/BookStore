@@ -1,25 +1,29 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entity;
-using BookStore.Domain.Interface;
+using BookStore.Domain.Repositories;
 
 namespace BookStore.Application.Services;
 
 public class OrderService : IOrderService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IOrderRepository _orderRepository;
+    private readonly IBookRepository _bookRepository;
+    private readonly IOrderDetailRepository _orderDetailRepository;
 
-    public OrderService(IUnitOfWork unitOfWork)
+    public OrderService(IOrderRepository orderRepository, IBookRepository bookRepository, IOrderDetailRepository orderDetailRepository)
     {
-        _unitOfWork = unitOfWork;
+        _orderRepository = orderRepository;
+        _bookRepository = bookRepository;
+        _orderDetailRepository = orderDetailRepository;
     }
 
     public async Task<ResultOrder> AddOrder(Guid userId, Guid bookId)
     {
         try
         {
-            var book = await _unitOfWork.Books.GetByIdAsync(bookId);
-            var order = await _unitOfWork.Orders.CheckUserOrder(userId);
+            var book = await _bookRepository.GetByIdAsync(bookId);
+            var order = await _orderRepository.CheckUserOrder(userId);
 
             if (order == null)
             {
@@ -30,7 +34,7 @@ public class OrderService : IOrderService
                     OrderSum = book.Price,                   
                 };
 
-                await _unitOfWork.Orders.AddAsync(order);
+                await _orderRepository.AddAsync(order);
 
                 var orderDetail = new OrderDetail()
                 {
@@ -40,18 +44,18 @@ public class OrderService : IOrderService
                     Qty = 1
                 };
                 
-                await _unitOfWork.OrderDetails.AddAsync(orderDetail);
-                await _unitOfWork.Commit();
+                await _orderDetailRepository.AddAsync(orderDetail);
+                await _orderDetailRepository.Save();
 
                 return ResultOrder.success;
             }
             else
             {
-                var detail = await _unitOfWork.OrderDetails.CheckOrderDetail(order.Id, book.Id);
+                var detail = await _orderDetailRepository.CheckOrderDetail(order.Id, book.Id);
                 if (detail != null)
                 {
                     detail.Qty += 1;
-                    await _unitOfWork.OrderDetails.AddAsync(detail);
+                    await _orderDetailRepository.AddAsync(detail);
                 }
                 else
                 {
@@ -62,10 +66,10 @@ public class OrderService : IOrderService
                         BookId = bookId,
                         Price = book.Price
                     };
-                    await _unitOfWork.OrderDetails.AddAsync(detail);
+                    await _orderDetailRepository.AddAsync(detail);
                 }
 
-                await _unitOfWork.Commit();
+                await _orderDetailRepository.Save();
 
                 return ResultOrder.success;
             }
@@ -80,14 +84,14 @@ public class OrderService : IOrderService
     {
         try
         {
-            var isExist = await _unitOfWork.Orders.IsExist(orderId);
+            var isExist = await _orderRepository.IsExist(orderId);
             if (isExist)
             {
-                var order = await _unitOfWork.Orders.GetByIdAsync(orderId);
+                var order = await _orderRepository.GetByIdAsync(orderId);
                 order.IsFinaly = true;
 
-                await _unitOfWork.Orders.UpdateAsync(order);
-                await _unitOfWork.Commit();
+                await _orderRepository.UpdateAsync(order);
+                await _orderRepository.Save();
 
                 return ResultOrder.success;
             }
@@ -101,21 +105,21 @@ public class OrderService : IOrderService
 
     public async Task<Order> GetOrderById(Guid orderId)
     {
-        return await _unitOfWork.Orders.GetByIdAsync(orderId);
+        return await _orderRepository.GetByIdAsync(orderId);
     }
 
     public async Task<ResultOrder> UpdateOrderPrice(Guid orderId)
     {
         try
         {
-            var isExist = await _unitOfWork.Orders.IsExist(orderId);
+            var isExist = await _orderRepository.IsExist(orderId);
             if(isExist)
             {
-                var order = await _unitOfWork.Orders.GetByIdAsync(orderId);
-                order.OrderSum = await _unitOfWork.Orders.OrderSum(orderId);
+                var order = await _orderRepository.GetByIdAsync(orderId);
+                order.OrderSum = await _orderRepository.OrderSum(orderId);
 
-                await _unitOfWork.Orders.UpdateAsync(order);
-                await _unitOfWork.Commit();
+                await _orderRepository.UpdateAsync(order);
+                await _orderRepository.Save();
 
                 return ResultOrder.success;
             }

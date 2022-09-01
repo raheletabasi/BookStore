@@ -9,5 +9,5 @@ public interface IBookCategoryService
     Task<ResultBookCategory> UpdateBookCategory(BookCategoryViewModel bookCategoryviewModel);
     Task<ResultBookCategory> DeleteBookCategory(Guid id);
     Task<BookCategory> GetBookCategoryById(Guid id);
-    Task<IEnumerable<BookCategory>> GetAllBookCategory();
+    List<BookCategory> GetAllBookCategory();
 }
