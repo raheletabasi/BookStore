@@ -1,11 +1,13 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
@@ -40,9 +42,9 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("GetAllCategory")]
-    public async Task<IActionResult> GetAllCategory()
+    public IActionResult GetAllCategory()
     {
-        var result = await _categoryService.GetAllCategory();
+        var result = _categoryService.GetAllCategory();
         return Ok(result);
     }
 

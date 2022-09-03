@@ -19,9 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Application", "Bo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BookStore.API", "BookStore.API", "{391E85A1-0FA7-4749-9F0E-DEA5DC821668}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Api", "BookStore.Api\BookStore.Api.csproj", "{F699B0C8-0302-4B43-99F6-537740338265}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Api", "BookStore.Api\BookStore.Api.csproj", "{F699B0C8-0302-4B43-99F6-537740338265}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Infrastracture.IoC", "BookStore.Infrastracture.IoC\BookStore.Infrastracture.IoC.csproj", "{9B4C8A14-7A51-4236-9B15-B3146E097C30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Infrastracture.IoC", "BookStore.Infrastracture.IoC\BookStore.Infrastracture.IoC.csproj", "{9B4C8A14-7A51-4236-9B15-B3146E097C30}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BookStore.Test", "BookStore.Test", "{AF664816-4BD5-4770-A159-333093103807}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Test", "BookStore.Test\BookStore.Test.csproj", "{9168658D-F612-45A4-8D5A-75C92D978FFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +53,10 @@ Global
 		{9B4C8A14-7A51-4236-9B15-B3146E097C30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B4C8A14-7A51-4236-9B15-B3146E097C30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B4C8A14-7A51-4236-9B15-B3146E097C30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9168658D-F612-45A4-8D5A-75C92D978FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9168658D-F612-45A4-8D5A-75C92D978FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9168658D-F612-45A4-8D5A-75C92D978FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9168658D-F612-45A4-8D5A-75C92D978FFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +67,7 @@ Global
 		{1573CB9B-75EF-4C6F-822C-9213083D31EA} = {4D428890-6016-4B1A-8A5B-1C5FBC0767FD}
 		{F699B0C8-0302-4B43-99F6-537740338265} = {391E85A1-0FA7-4749-9F0E-DEA5DC821668}
 		{9B4C8A14-7A51-4236-9B15-B3146E097C30} = {52102DDF-40D8-4DD1-B805-752EF9FB8C4F}
+		{9168658D-F612-45A4-8D5A-75C92D978FFF} = {AF664816-4BD5-4770-A159-333093103807}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C061E14C-A996-4153-8EA7-BB4C6D6A7A5E}

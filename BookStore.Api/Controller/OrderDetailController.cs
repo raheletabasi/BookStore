@@ -1,5 +1,6 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace BookStore.Api.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class OrderDetailController : ControllerBase
 {
     private readonly IOrderDetailService _orderDetailService;
