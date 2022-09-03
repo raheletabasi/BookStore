@@ -1,5 +1,6 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace BookStore.Api.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class PermissionController : ControllerBase
 {
     private readonly IPermissionService _permissionService;
@@ -48,9 +50,9 @@ public class PermissionController : ControllerBase
     }
 
     [HttpGet("GetAllPermission")]
-    public async Task<IActionResult> GetAllPermission()
+    public IActionResult GetAllPermission()
     {
-        var result = await _permissionService.GetAllPermission();
+        var result = _permissionService.GetAllPermission();
         return Ok(result);
     }
 

@@ -11,4 +11,9 @@
     <ProjectReference Include="..\BookStore.Infrastructure\BookStore.Infrastructure.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\Responses\" />
+    <Folder Include="DTOs\Requests\" />
+  </ItemGroup>
+
 </Project>

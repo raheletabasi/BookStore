@@ -4,6 +4,8 @@ namespace BookStore.Application.DTOs.User;
 
 public class LoginUserViewModel
 {
+    public Guid Id { get; set; }
+
     [Display(Name = "نام کاربری")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     [MaxLength(200, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]

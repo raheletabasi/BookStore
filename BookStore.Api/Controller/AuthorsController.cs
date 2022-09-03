@@ -1,11 +1,13 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class AuthorsController : ControllerBase
 {
     private readonly IAuthorService _authorService;
@@ -20,9 +22,9 @@ public class AuthorsController : ControllerBase
     {
         var result = await _authorService.AddAuthor(authorViewModel);
 
-        if (result == Application.Interfaces.ResultAuthor.duplicate) return BadRequest("Author Is Duplicate");
+        if (result == ResultAuthor.duplicate) return BadRequest("Author Is Duplicate");
 
-        if (result == Application.Interfaces.ResultAuthor.Error) return BadRequest("Error In Add Author");
+        if (result == ResultAuthor.Error) return BadRequest("Error In Add Author");
 
         return Ok("Success");
     }
@@ -32,11 +34,11 @@ public class AuthorsController : ControllerBase
     {
         var result = await _authorService.UpdateAuthor(authorViewModel);
 
-        if (result == Application.Interfaces.ResultAuthor.duplicate) return BadRequest("Author Is Duplicate");
+        if (result == ResultAuthor.duplicate) return BadRequest("Author Is Duplicate");
 
-        if (result == Application.Interfaces.ResultAuthor.notFound) return BadRequest("Auhor Is No Found");
+        if (result == ResultAuthor.notFound) return BadRequest("Auhor Is No Found");
 
-        if (result == Application.Interfaces.ResultAuthor.Error) return BadRequest("Error In Update Author");
+        if (result == ResultAuthor.Error) return BadRequest("Error In Update Author");
 
         return Ok("Success");
     }
@@ -46,17 +48,17 @@ public class AuthorsController : ControllerBase
     {
         var result = await _authorService.DeleteAuthor(id);
 
-        if (result == Application.Interfaces.ResultAuthor.notFound) return BadRequest("Auhor Is No Found");
+        if (result == ResultAuthor.notFound) return BadRequest("Auhor Is No Found");
 
-        if (result == Application.Interfaces.ResultAuthor.Error) return BadRequest("Error In Delete Author");
+        if (result == ResultAuthor.Error) return BadRequest("Error In Delete Author");
 
         return Ok("Success");
     }
 
     [HttpGet("GetAllAuthors")]
-    public async Task<IActionResult> GetAllAuthors()
+    public IActionResult GetAllAuthors()
     {
-        var result = await _authorService.GetAllAuthors();
+        var result = _authorService.GetAllAuthors();
         return Ok(result);
     }
 

@@ -1,11 +1,13 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class PublisherController : ControllerBase
 {
     private readonly IPublisherService _publisherService;
@@ -54,9 +56,9 @@ public class PublisherController : ControllerBase
     }
 
     [HttpGet("GetAllPublishers")]
-    public async Task<IActionResult> GetAllPublishers()
+    public IActionResult GetAllPublishers()
     {
-        var result = await _publisherService.GetAllPublishers();
+        var result = _publisherService.GetAllPublishers();
         return Ok(result);
     }
 

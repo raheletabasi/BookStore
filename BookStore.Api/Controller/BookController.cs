@@ -1,11 +1,13 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class BookController : ControllerBase
 {
     private readonly IBookService _bookService;
@@ -20,9 +22,9 @@ public class BookController : ControllerBase
     {
         var result = await _bookService.AddBook(bookViewModel);
 
-        if (result == Application.Interfaces.ResultBook.duplicate) return BadRequest("Book Is Duplicate");
+        if (result == ResultBook.duplicate) return BadRequest("Book Is Duplicate");
 
-        if (result == Application.Interfaces.ResultBook.Error) return BadRequest("Error In Add Book");
+        if (result == ResultBook.Error) return BadRequest("Error In Add Book");
 
         return Ok("Success");
     }
@@ -32,9 +34,9 @@ public class BookController : ControllerBase
     {
         var result = await _bookService.DeleteBook(id);
 
-        if (result == Application.Interfaces.ResultBook.notFound) return BadRequest("Book Is No Found");
+        if (result == ResultBook.notFound) return BadRequest("Book Is No Found");
 
-        if (result == Application.Interfaces.ResultBook.Error) return BadRequest("Error In Delete Book");
+        if (result == ResultBook.Error) return BadRequest("Error In Delete Book");
 
         return Ok("Success");
     }
@@ -47,9 +49,9 @@ public class BookController : ControllerBase
     }
 
     [HttpGet("GetAllBook")]
-    public async Task<IActionResult> GetAllBooks()
+    public IActionResult GetAllBooks()
     {
-        var result = await _bookService.GetAllBooks();
+        var result = _bookService.GetAllBooks();
         return Ok(result);
     }
 
@@ -65,11 +67,11 @@ public class BookController : ControllerBase
     {
         var result = await _bookService.UpdateBook(bookViewModel);
 
-        if (result == Application.Interfaces.ResultBook.duplicate) return BadRequest("Book Is Duplicate");
+        if (result == ResultBook.duplicate) return BadRequest("Book Is Duplicate");
 
-        if (result == Application.Interfaces.ResultBook.notFound) return BadRequest("Book Is No Found");
+        if (result == ResultBook.notFound) return BadRequest("Book Is No Found");
 
-        if (result == Application.Interfaces.ResultBook.Error) return BadRequest("Error In Update Book");
+        if (result == ResultBook.Error) return BadRequest("Error In Update Book");
 
         return Ok("Success");
     }

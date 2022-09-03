@@ -1,11 +1,13 @@
 ﻿using BookStore.Application.DTOs;
 using BookStore.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Api.Controller;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class UserRoleController : ControllerBase
 {
     private readonly IUserRoleService _userRoleService;
@@ -40,9 +42,9 @@ public class UserRoleController : ControllerBase
     }
 
     [HttpGet("GetAllUserRole")]
-    public async Task<IActionResult> GetAllUserRole()
+    public IActionResult GetAllUserRole()
     {
-        var result = await _userRoleService.GetAllUserRole();
+        var result = _userRoleService.GetAllUserRole();
         return Ok(result);
     }
 
